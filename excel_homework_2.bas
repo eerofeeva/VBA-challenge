@@ -8,7 +8,7 @@ Sub main()
          Dim thisarray As Variant
          Dim lastRow As Long
          Dim uniques As Collection
-         Dim source As Range
+         Dim source As range
          Dim tickerarray As Variant
   
          ' Loop through all of the worksheets in the active workbook.
@@ -17,10 +17,10 @@ Sub main()
    
              lastRow = Cells(Rows.Count, "G").End(xlUp).Row
              
-              Set tickersource = Current.Range("A2:A" & lastRow)
+              Set tickersource = Current.range("A2:A" & lastRow)
               Set uniques = GetUniqueValues(tickersource.Value)
               'tickerarray = collectionToArray(uniques)
-              thisarray = Current.Range("A1:G" & lastRow).Value
+              thisarray = Current.range("A1:G" & lastRow).Value
             
               counter = 1
              
@@ -100,18 +100,34 @@ nextsheet:
              'post values from final into worksheet
              Call PrintArray(final, Current.Name)
              
+             Call SpecCheck("J2:J" & CStr(UBound(final, 2) - 1), Current.Name)
+             
              'clear final array
              ReDim final(0, 0)
          Next
    
 End Sub
+Public Function SpecCheck(myRange As String, worksheetName As String)
+    Dim iRow As range
+    Dim cell As range
+    Set iRow = Worksheets(worksheetName).range(myRange)
+    
+    For Each cell In iRow
+        If cell.Value > "0" Then
+            cell.Interior.Color = vbGreen
+        ElseIf cell.Value < "0" Then
+            cell.Interior.Color = vbRed
+        End If
+    Next
+End Function
+
 
 Public Function PrintArray(final As Variant, sheetname As String)
 
 Dim finalarray As Variant
 finalarray = WorksheetFunction.Transpose(final)
 
-Worksheets(sheetname).Range("I1").Resize(UBound(finalarray, 1), UBound(finalarray, 2)).Value = finalarray
+Worksheets(sheetname).range("I1").Resize(UBound(finalarray, 1), UBound(finalarray, 2)).Value = finalarray
 
 'Set Summary = Range("I1:").Resize(Transpose(UBound(finalarray, 1)))
 ' Summary.Value = finalarray
